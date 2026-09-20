@@ -1,11 +1,8 @@
 # Product OS
 
-The personal product operating system for a Sense PM.
+The personal product operating system for a PM.
 
-It is the desk you sit at in the morning: Jira and Cliq already correlated, the `go_services` clone indexed, prototypes you can click, notes you can file from, Copilot that will not write Jira until you Approve, and a marketing lane that discovers shippable features without posting anything on its own.
-
-Local app: [http://localhost:3000](http://localhost:3000)  
-API: [http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
+It is the desk you sit at in the morning: Jira and Cliq already correlated, the `codebase` clone indexed, prototypes you can click, notes you can file from, Copilot that will not write Jira until you Approve, and a marketing lane that discovers shippable features without posting anything on its own.
 
 ---
 
@@ -16,10 +13,10 @@ Product OS is not a generic chatbot with a Jira plugin. It is a workspace that a
 | Area | What you do here |
 | --- | --- |
 | **This week** | Evidence-backed standup. Tickets, chats, and code in one briefing. |
-| **Jira / Support** | Sense (`AC`) and Product Support (`PS`) in PM scope. Copilot is the only Jira write path, and only after **Approve**. |
+| **Jira / Support** | Boards in your PM scope. Copilot is the only Jira write path, and only after **Approve**. |
 | **Cliq** | Threads the PM is in. Ingest is read-only from the scheduled job. |
-| **Codebase** | Local `go_services` clone. Index a branch, search, cite files. |
-| **Prototype** | Sense sandboxes with production-shaped routes. Table of projects, last modified, filters. **Write PRD** attaches the prototype to Copilot. |
+| **Codebase** | Local `codebase` clone. Index a branch, search, cite files. |
+| **Prototype** | Your product's sandboxes with production-shaped routes. Table of projects, last modified, filters. **Write PRD** attaches the prototype to Copilot. |
 | **PRD** | Ground a spec in indexed code, tagged AC tickets, and/or a Sense prototype. Export markdown or PDF. |
 | **Roadmap / Features / Artifacts / Comms** | Epic status, feature extract, docs, and release communication drafts. |
 | **Notes** | Meetings, dailies, decisions, learnings. Date filter, delete, structure/summarise/extract, file a ticket from an actionable. |
@@ -39,9 +36,9 @@ browser  :3000  Next.js (MUI)
               ▼
 API      :8000  FastAPI + SQLite (data/pm_agent.db, local only)
               │
-              ├── Jira (AC, PS)
+              ├── Jira
               ├── Zoho Cliq (cliq.zoho.in)
-              ├── local go_services git clone
+              ├── local codebase git clone
               ├── Google Drive / Sheets (marketing, optional)
               └── LLM (optional — ingest still works without it)
 ```
@@ -49,7 +46,7 @@ API      :8000  FastAPI + SQLite (data/pm_agent.db, local only)
 - **Frontend** (`frontend/`): App Router, client pages, Copilot widget, prototype studio.
 - **Backend** (`backend/`): ingest, standup, Copilot plans, prototype kit, PRD, marketing discovery.
 - **Data** (`data/`): SQLite, tokens, prototype files, indexes. **Not in git.**
-- **Product clone**: `CODEBASE_PATH` (Desktop `go_services`). **Not in this repo.** Sense stays AC-only.
+- **Product clone**: `CODEBASE_PATH` (Desktop `codebase`). **Not in this repo.**
 
 ---
 
@@ -87,7 +84,7 @@ Open [http://localhost:3000](http://localhost:3000). Do not start a second uvico
 
 **4. Point at product code**
 
-Set `CODEBASE_PATH` to your local `go_services` clone. Index a branch from **Codebase**. Git fetch may need VPN/whitelist; if remote fetch fails, keep local branches.
+Set `CODEBASE_PATH` to your local `codebase` clone. Index a branch from **Codebase**. Git fetch may need VPN/whitelist; if remote fetch fails, keep local branches.
 
 ---
 
