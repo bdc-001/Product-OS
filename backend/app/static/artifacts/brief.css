@@ -1,0 +1,594 @@
+/* ============================================================================
+   CONVIN A4 RELEASE BRIEF — print stylesheet + component library
+   ----------------------------------------------------------------------------
+   This file is passed to the composing model in full, so the comments are
+   documentation it reads. Rules stated here are binding on the HTML.
+
+   PRINCIPLES
+   1. Hairlines carry structure. Elevation marks emphasis.
+      `.is-focus` appears AT MOST ONCE PER PAGE, on the item the surrounding
+      copy is actually about. Used by default it is decoration, not hierarchy.
+   2. Never shrink base type to make content fit. Put `.page--dense` on the
+      page instead — it scales the whole page as a system and keeps the
+      relationships intact. Ad-hoc font sizes break the ramp.
+   3. Every block that is not self-labelling (table, leads, figure, panel)
+      carries a `.block-head`. A headless table gives the reader no way to
+      know what they are looking at.
+   4. Target fill is 88-98% of the page body. Below 85% the page reads
+      unfinished; above 100% Chromium clips it. Use `.page--airy` /
+      `.page--dense` and the `.u-grow` utility to land in range.
+
+   PAGE SKELETON
+   <div class="page page--hero">
+     <header class="hero">
+       <div class="masthead">
+         <img class="masthead__logo" src="(logos.on_dark data URI)" alt="Convin">
+         <span class="masthead__label">Campaign analytics brief</span>
+       </div>
+       <div class="hero__badges">
+         <span class="pill">Convin Activate - WhatsApp Analytics</span>
+         <span class="hero__released">Released 2026</span>
+       </div>
+       <h1 class="hero__title">...outcome sentence...</h1>
+       <p class="hero__lede">...one or two lines...</p>
+     </header>
+     <div class="stat-band">...</div>       <!-- full bleed, outside .page__body -->
+     <div class="page__body">...blocks...</div>
+     <footer class="foot">...</footer>
+   </div>
+
+   Page 2+ uses `.page page--plain` with `.masthead` as the first child of
+   `.page__body` instead of a `.hero`.
+
+   IMAGES
+   Every <img> src must be a data: URI by print time. A placeholder token that
+   survives into the PDF renders as a 14x16 broken-image glyph. If no image is
+   available, omit the <figure> entirely — never ship an empty frame.
+   ========================================================================== */
+
+:root {
+  /* --- brand: primary --------------------------------------------------- */
+  --primary-900:#0a2e7a; --primary-800:#103ea6; --primary-700:#144ecf;
+  --primary-600:#1658e1; --primary-500:#1a62f2; --primary-400:#4a84f5;
+  --primary-300:#7da8f8; --primary-200:#afcafb; --primary-100:#d1e1fd;
+  --primary-50:#eef4ff;
+
+  /* --- brand: neutral --------------------------------------------------- */
+  --neutral-900:#050505; --neutral-800:#0a0a0a; --neutral-700:#0f0f0f;
+  --neutral-600:#121212; --neutral-500:#151515; --neutral-400:#3f3f3f;
+  --neutral-300:#6a6a6a; --neutral-200:#959595; --neutral-100:#c0c0c0;
+  --neutral-50:#ebebeb;
+
+  /* --- brand: tertiary + accent ----------------------------------------- */
+  --tertiary-300:#a7c3ff; --tertiary-200:#bfd4ff; --tertiary-100:#d6e4ff;
+  --accent-yellow:#fced02; --accent-cyan:#5fe6eb;
+
+  /* --- status ----------------------------------------------------------- */
+  --success:#1ac468; --warning:#f8aa0d; --error:#f93739; --info:#1580eb;
+
+  /* --- derived surfaces ------------------------------------------------- */
+  --hairline:#e3e9f4;            /* the workhorse border — never blue */
+  --hairline-strong:#cfdcf4;
+  --tint:#f5f8fe;                /* zebra row */
+  --paper:#ffffff;
+
+  /* --- gradients -------------------------------------------------------- */
+  --glow-hero: radial-gradient(115% 85% at 80% -12%,
+                 #1a62f2 0%, rgba(26,98,242,.55) 26%, rgba(26,98,242,0) 62%);
+  --glow-panel: radial-gradient(85% 130% at 92% 115%,
+                 #144ecf 0%, rgba(20,78,207,0) 62%);
+
+  /* --- type ------------------------------------------------------------- */
+  --display:"Helvetica Neue","Helvetica",Arial,sans-serif;
+  --body:"Inter","Helvetica Neue",sans-serif;
+
+  /* --- geometry --------------------------------------------------------- */
+  --pad:44px;                    /* page inset */
+  --r:10px;                      /* card radius */
+  --r-sm:7px;
+  --r-pill:999px;
+
+  /* --- DENSITY SYSTEM ---------------------------------------------------
+     Every component sizes off these. Override the set on `.page`, never the
+     individual component. Default suits about 5 blocks on a page.          */
+  --gap:20px;                    /* between blocks in .page__body */
+  --card-pad-y:15px;  --card-pad-x:17px;
+  --cell-pad-y:9px;   --cell-pad-x:13px;
+  --step-pad-y:11px;  --step-pad-x:16px;
+
+  --fs-h1:38px;       --lh-h1:42px;
+  --fs-h2:23px;       --lh-h2:29px;
+  --fs-h3:15px;       --lh-h3:20px;      /* card / step lead */
+  --fs-lede:14.5px;   --lh-lede:23px;
+  --fs-body:13.5px;   --lh-body:20.5px;
+  --fs-small:12.5px;  --lh-small:18.5px;
+  --fs-table:12px;    --lh-table:17.5px;
+  --fs-label:10.5px;  --lh-label:15px;   /* tracked uppercase */
+  --fs-stat:27px;     --lh-stat:31px;
+}
+
+/* Airy: few blocks, short copy. Pushes a thin page up into the fill band. */
+.page--airy {
+  --gap:32px;
+  --card-pad-y:20px; --card-pad-x:22px;
+  --cell-pad-y:12px; --cell-pad-x:15px;
+  --step-pad-y:15px; --step-pad-x:18px;
+  --fs-h1:40px;      --lh-h1:45px;
+  --fs-h2:25px;      --lh-h2:31px;
+  --fs-lede:15px;    --lh-lede:24px;
+  --fs-body:14px;    --lh-body:22px;
+  --fs-table:12.5px; --lh-table:18.5px;
+  --fs-stat:29px;    --lh-stat:33px;
+}
+
+/* Dense: 6+ blocks, or a long table. Preferred over hand-tuning font sizes. */
+.page--dense {
+  --gap:13px;
+  --card-pad-y:11px; --card-pad-x:13px;
+  --cell-pad-y:7px;  --cell-pad-x:11px;
+  --step-pad-y:8px;  --step-pad-x:14px;
+  --fs-h1:33px;      --lh-h1:37px;
+  --fs-h2:20px;      --lh-h2:25px;
+  --fs-h3:13.5px;    --lh-h3:18px;
+  --fs-lede:13.5px;  --lh-lede:21px;
+  --fs-body:12.5px;  --lh-body:19px;
+  --fs-small:11.5px; --lh-small:17px;
+  --fs-table:11px;   --lh-table:16px;
+  --fs-stat:24px;    --lh-stat:28px;
+}
+
+/* ============================================================================
+   RESET + PAGE SHELL
+   ========================================================================== */
+
+@page { size: A4; margin: 0; }
+* { box-sizing:border-box; margin:0; padding:0; }
+
+html, body {
+  width:794px;
+  font-family:var(--body);
+  color:var(--neutral-900);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  print-color-adjust:exact;
+  -webkit-print-color-adjust:exact;
+}
+
+.page {
+  position:relative;
+  width:794px; height:1123px; overflow:hidden;
+  display:flex; flex-direction:column;
+  background:var(--paper);
+  page-break-after:always; break-after:page;
+  print-color-adjust:exact;
+  -webkit-print-color-adjust:exact;
+}
+.page:last-child { break-after:auto; page-break-after:auto; }
+
+.page__body {
+  flex:1 1 0%; min-height:0; overflow:hidden;
+  padding:0 var(--pad);
+  display:flex; flex-direction:column;
+  gap:var(--gap);
+}
+.page--hero  .page__body { padding-top:26px; }
+.page--plain .page__body { padding-top:30px; }
+
+/* Nothing should split across a page boundary. */
+.card, .step, .panel, .figure, .callout, .quote,
+.stat, .leads__item, .matrix tr { break-inside:avoid; page-break-inside:avoid; }
+
+/* ============================================================================
+   MASTHEAD
+   ========================================================================== */
+
+.masthead { display:flex; align-items:center; justify-content:space-between; }
+.masthead__logo { height:30px; width:auto; display:block; }    /* page 1 */
+.page--plain .masthead__logo { height:24px; }                  /* later pages */
+.masthead__label {
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--neutral-300);
+}
+.page--hero .masthead__label { color:var(--primary-300); }
+
+/* ============================================================================
+   HERO — black with a blue corner glow. Page 1 only.
+   The pill carries PRODUCT LINE + FEATURE ("Convin Activate - WhatsApp
+   Analytics"), never the product line alone.
+   ========================================================================== */
+
+.hero {
+  padding:36px var(--pad) 30px;
+  background:var(--glow-hero), var(--neutral-900);
+  color:#fff;
+}
+.hero__badges { display:flex; align-items:center; gap:14px; margin:20px 0 16px; }
+.pill {
+  padding:6px 15px; border-radius:var(--r-pill);
+  background:rgba(26,98,242,.28); border:1px solid rgba(125,168,248,.55);
+  font-size:var(--fs-label); font-weight:600; letter-spacing:1.3px;
+  text-transform:uppercase; color:#fff; white-space:nowrap;
+}
+.hero__released {
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.3px;
+  text-transform:uppercase; color:rgba(255,255,255,.55);
+}
+.hero__title {
+  font-family:var(--display); font-weight:700;
+  font-size:var(--fs-h1); line-height:var(--lh-h1); letter-spacing:-1.1px;
+  max-width:92%; text-wrap:balance;
+}
+.hero__lede {
+  margin-top:16px; max-width:90%;
+  font-size:var(--fs-lede); line-height:var(--lh-lede);
+  color:rgba(255,255,255,.86);
+}
+
+/* ============================================================================
+   STAT BAND — full bleed, sits between .hero and .page__body.
+   Values must be different KINDS of claim: a count, a mechanism, an absolute.
+   No two values may be identical. Labels complete the value into a sentence
+   and never restate a table column.
+   ========================================================================== */
+
+.stat-band {
+  display:grid; grid-auto-flow:column; grid-auto-columns:1fr;
+  background:var(--primary-50);
+}
+.stat-band--dark { background:var(--neutral-900); }
+.stat { padding:16px var(--pad); border-left:1px solid #dbe6fb; }
+.stat:first-child { border-left:0; }
+.stat + .stat { padding-left:26px; }
+.stat-band--dark .stat { border-left-color:rgba(255,255,255,.14); }
+
+.stat__value {
+  font-family:var(--display); font-weight:700;
+  font-size:var(--fs-stat); line-height:var(--lh-stat); letter-spacing:-1px;
+  color:var(--primary-500);
+  font-variant-numeric:tabular-nums;
+}
+.stat-band--dark .stat__value { color:var(--tertiary-300); }
+.stat__label {
+  margin-top:5px;
+  font-size:10px; line-height:14px; font-weight:500; letter-spacing:.5px;
+  text-transform:uppercase; color:var(--neutral-400);
+  overflow-wrap:break-word;
+}
+.stat-band--dark .stat__label { color:rgba(255,255,255,.66); }
+
+/* ============================================================================
+   HEADINGS
+   `.sec` is a page-level section heading; `.block-head` labels an individual
+   block. Both put the qualifier INLINE and to the right, never above.
+   ========================================================================== */
+
+.kicker {                                    /* small brand-blue eyebrow */
+  font-size:var(--fs-label); font-weight:600; letter-spacing:1.5px;
+  text-transform:uppercase; color:var(--primary-500); margin-bottom:9px;
+}
+
+.sec { display:flex; align-items:baseline; gap:14px; }
+.sec__h {
+  font-family:var(--display); font-weight:700;
+  font-size:var(--fs-h2); line-height:var(--lh-h2); letter-spacing:-.7px;
+  flex:1 1 auto; min-width:0; text-wrap:balance;
+}
+.sec__note {
+  flex:0 0 auto; max-width:30%; text-align:right;
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.4px;
+  text-transform:uppercase; color:var(--neutral-300);
+}
+.sec + .prose { margin-top:calc(var(--gap) * -0.5); }
+
+.block-head { display:flex; align-items:baseline; gap:13px; margin-bottom:12px; }
+.block-head__h {
+  font-family:var(--display); font-weight:700;
+  font-size:20px; line-height:26px; letter-spacing:-.6px;
+  flex:1 1 auto; min-width:0;
+}
+.page--dense .block-head__h { font-size:18px; line-height:23px; }
+.block-head__note {
+  flex:0 0 auto;
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.4px;
+  text-transform:uppercase; color:var(--neutral-300);
+}
+
+.prose {
+  font-size:var(--fs-body); line-height:var(--lh-body);
+  color:var(--neutral-600); max-width:96%;
+}
+.prose--tight { max-width:100%; }
+.prose b, .prose strong { font-weight:600; color:var(--neutral-900); }
+
+/* ============================================================================
+   CARDS — reasons to care, never a restatement of the table.
+   2 or 3 columns read best on A4. 4 gets cramped below .page--airy.
+   ========================================================================== */
+
+.cards { display:grid; gap:12px; align-items:stretch; }
+.cards--1 { grid-template-columns:1fr; }
+.cards--2 { grid-template-columns:repeat(2,1fr); }
+.cards--3 { grid-template-columns:repeat(3,1fr); }
+.cards--4 { grid-template-columns:repeat(4,1fr); }
+
+.card {
+  padding:var(--card-pad-y) var(--card-pad-x);
+  background:var(--paper);
+  border:1px solid var(--hairline); border-radius:var(--r);
+  display:flex; flex-direction:column;
+}
+.card__lead {
+  font-family:var(--display); font-weight:700;
+  font-size:var(--fs-h3); line-height:var(--lh-h3);
+  text-wrap:balance;
+}
+.card__text {
+  margin-top:7px;
+  font-size:var(--fs-small); line-height:var(--lh-small);
+  color:var(--neutral-300);
+}
+
+/* THE single emphasis treatment. One per page, on the item being discussed. */
+.is-focus { border-color:var(--primary-500); background:var(--primary-50); }
+.is-focus .card__text { color:var(--neutral-400); }
+
+/* ============================================================================
+   TABLE — what it does and where, not why it matters.
+   Square corners, black header, hairline rows. No radius, no shadow.
+   Status colour goes on a column that genuinely holds statuses, and then on
+   EVERY row of that column — partial flagging reads as a rendering bug.
+   Drop any column whose values are all identical; fold it into the heading.
+   ========================================================================== */
+
+.matrix {
+  width:100%; border-collapse:collapse;
+  font-size:var(--fs-table); line-height:var(--lh-table);
+}
+.matrix th {
+  background:var(--neutral-900); color:#fff;
+  text-align:left; vertical-align:bottom;
+  padding:10px var(--cell-pad-x);
+  font-size:9.5px; font-weight:500; letter-spacing:1.1px; text-transform:uppercase;
+}
+.matrix td {
+  padding:var(--cell-pad-y) var(--cell-pad-x);
+  vertical-align:top; color:var(--neutral-600);
+  border-bottom:1px solid var(--hairline);
+}
+.matrix tbody tr:nth-child(even) td { background:var(--tint); }
+.matrix tbody tr:last-child td { border-bottom:0; }
+.matrix td:first-child { font-weight:600; color:var(--neutral-900); }
+
+/* Column width helpers — put on <th>. Prevents a narrow column wrapping
+   two-word labels ("Web Chat / Testing") while a wide one runs half empty. */
+.col-xs { width:11%; } .col-sm { width:16%; }
+.col-md { width:24%; } .col-lg { width:34%; }
+
+.v-yes { color:var(--success); font-weight:500; }
+.v-no  { color:var(--error);   font-weight:500; }
+.v-mid { color:var(--warning); font-weight:500; }
+.v-info{ color:var(--info);    font-weight:500; }
+.tok   { color:var(--primary-500); font-weight:600; }   /* inline sample value */
+
+/* ============================================================================
+   STEPS — numbered only when the order is real. An enumeration of parallel
+   items uses .steps--plain, which drops the numerals.
+   ========================================================================== */
+
+.steps { display:flex; flex-direction:column; gap:8px; }
+.step {
+  display:grid; grid-template-columns:34px 1fr; align-items:start;
+  padding:var(--step-pad-y) var(--step-pad-x);
+  background:var(--paper);
+  border:1px solid var(--hairline); border-radius:var(--r);
+}
+.steps--plain .step { grid-template-columns:1fr; }
+.steps--plain .step__n { display:none; }
+.step__n {
+  font-family:var(--display); font-weight:700; font-size:14px;
+  color:var(--primary-500); font-variant-numeric:tabular-nums;
+}
+.step__h {
+  font-family:var(--display); font-weight:700;
+  font-size:var(--fs-h3); line-height:var(--lh-h3);
+}
+.step__t {
+  font-size:var(--fs-small); line-height:var(--lh-small);
+  color:var(--neutral-300);
+}
+.step__h + .step__t { margin-top:5px; }
+
+/* ============================================================================
+   FLOW — a real left-to-right sequence (Sent, Delivered, Read, Responded).
+   Use ONLY for a genuine sequence; otherwise use .steps or .cards.
+   ========================================================================== */
+
+.flow { display:grid; grid-auto-flow:column; grid-auto-columns:1fr; column-gap:22px; }
+.flow__item { position:relative; padding-top:44px; }
+.flow__item::before {
+  content:""; position:absolute; top:15px; left:34px; right:-22px;
+  height:2px; background:var(--primary-200);
+}
+.flow__item:last-child::before { display:none; }
+.flow__dot {
+  position:absolute; top:0; left:0;
+  width:32px; height:32px; border-radius:50%;
+  background:var(--primary-500); color:#fff;
+  font-family:var(--display); font-weight:700; font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+}
+.flow__lead {
+  font-family:var(--display); font-weight:700;
+  font-size:var(--fs-h3); line-height:var(--lh-h3);
+}
+.flow__text {
+  margin-top:5px;
+  font-size:var(--fs-small); line-height:var(--lh-small); color:var(--neutral-300);
+}
+
+/* ============================================================================
+   BOLD LEAD LIST — bold lead, then a sentence. Two columns when 4+ items.
+   ========================================================================== */
+
+.leads { display:grid; grid-template-columns:repeat(2,1fr); gap:16px 30px; }
+.leads--1 { grid-template-columns:1fr; }
+.leads--3 { grid-template-columns:repeat(3,1fr); }
+.leads__head {
+  grid-column:1 / -1;
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.4px;
+  text-transform:uppercase; color:var(--neutral-300);
+  margin-bottom:2px;
+}
+.leads__item {
+  font-size:var(--fs-small); line-height:var(--lh-small); color:var(--neutral-300);
+}
+.leads__item b { font-weight:600; color:var(--neutral-900); }
+
+/* ============================================================================
+   FIGURE — product screenshot with a caption.
+   src MUST be a data: URI at print time. No image, no figure.
+   Caption states what the screen shows, not "screenshot of X".
+   ========================================================================== */
+
+.figure {
+  border:1px solid var(--hairline); border-radius:var(--r);
+  overflow:hidden; background:var(--paper);
+}
+.figure__img { display:block; width:100%; height:auto; }
+.figure__cap {
+  padding:9px 14px 11px;
+  border-top:1px solid var(--hairline); background:var(--tint);
+  font-size:11.5px; line-height:16px; color:var(--neutral-300);
+}
+.figure__cap b { font-weight:600; color:var(--neutral-600); }
+.figures { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+
+/* ============================================================================
+   CALLOUT — one emphasized statement. Closes an argument, or carries a fact
+   that does not deserve a card grid.
+   ========================================================================== */
+
+.callout {
+  padding:18px 20px; border-radius:var(--r);
+  background:var(--primary-50); border:1px solid var(--primary-100);
+  border-left:3px solid var(--primary-500);
+}
+.callout__kicker {
+  font-size:var(--fs-label); font-weight:600; letter-spacing:1.4px;
+  text-transform:uppercase; color:var(--primary-500); margin-bottom:8px;
+}
+.callout__statement {
+  font-family:var(--display); font-weight:700;
+  font-size:19px; line-height:25px; letter-spacing:-.5px;
+}
+.callout__support {
+  margin-top:7px;
+  font-size:var(--fs-small); line-height:var(--lh-small); color:var(--neutral-400);
+}
+
+/* ============================================================================
+   COMPARISON — two stacks side by side (before/after, this/that).
+   ========================================================================== */
+
+.compare { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.compare__col {
+  padding:var(--card-pad-y) var(--card-pad-x);
+  border:1px solid var(--hairline); border-radius:var(--r); background:var(--paper);
+}
+.compare__col--accent { border-color:var(--primary-500); background:var(--primary-50); }
+.compare__h {
+  font-family:var(--display); font-weight:700;
+  font-size:var(--fs-h3); line-height:var(--lh-h3); margin-bottom:10px;
+}
+.compare__list { list-style:none; display:flex; flex-direction:column; gap:7px; }
+.compare__list li {
+  position:relative; padding-left:15px;
+  font-size:var(--fs-small); line-height:var(--lh-small); color:var(--neutral-300);
+}
+.compare__list li::before {
+  content:""; position:absolute; left:0; top:7px;
+  width:5px; height:5px; border-radius:50%; background:var(--primary-300);
+}
+
+/* ============================================================================
+   PANEL — dark caveat grid. Glow sits in the opposite corner from the hero.
+   ========================================================================== */
+
+.panel {
+  flex:0 0 auto;
+  padding:20px 24px; border-radius:var(--r); color:#fff;
+  background:var(--glow-panel), var(--neutral-900);
+}
+.panel__label {
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.4px;
+  text-transform:uppercase; color:rgba(255,255,255,.72); margin-bottom:12px;
+}
+.panel__grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px 26px; }
+.panel__grid--1 { grid-template-columns:1fr; }
+.panel__grid--3 { grid-template-columns:repeat(3,1fr); }
+.panel__grid p {
+  font-size:var(--fs-small); line-height:var(--lh-small); color:rgba(255,255,255,.82);
+}
+.panel__grid p b { color:#fff; font-weight:600; }
+
+/* ============================================================================
+   QUOTE
+   ========================================================================== */
+
+.quote {
+  padding-left:18px; border-left:3px solid var(--primary-200);
+  font-size:15px; line-height:23px; color:var(--neutral-600);
+}
+.quote__attr {
+  margin-top:8px;
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.2px;
+  text-transform:uppercase; color:var(--neutral-300);
+}
+
+/* ============================================================================
+   UTILITIES
+   ========================================================================== */
+
+.u-grow  { flex:1 1 auto; min-height:0; }    /* absorb slack — one per page */
+.spacer  { flex:1 1 auto; }                  /* push what follows to the bottom */
+.divider { height:1px; background:var(--hairline); }
+.label {
+  font-size:var(--fs-label); font-weight:500; letter-spacing:1.4px;
+  text-transform:uppercase; color:var(--neutral-300);
+}
+.tag {
+  display:inline-block; padding:3px 9px; border-radius:var(--r-pill);
+  background:var(--primary-50); border:1px solid var(--primary-100);
+  font-size:10px; font-weight:600; letter-spacing:.6px;
+  text-transform:uppercase; color:var(--primary-700);
+}
+.u-muted  { color:var(--neutral-300); }
+.u-brand  { color:var(--primary-500); }
+.u-nowrap { white-space:nowrap; }
+.u-num    { font-variant-numeric:tabular-nums; }
+
+/* ============================================================================
+   FOOTER
+   ========================================================================== */
+
+.foot {
+  flex-shrink:0; position:relative; z-index:2; background:var(--paper);
+  margin:auto var(--pad) 0; padding:12px 0 20px;
+  border-top:1px solid var(--hairline);
+  display:flex; justify-content:space-between; align-items:baseline; gap:20px;
+  font-size:10px; font-weight:500; letter-spacing:1.2px;
+  text-transform:uppercase; color:var(--neutral-200);
+}
+.foot__note { max-width:70%; }        /* a real sentence beats a bare page rule */
+
+/* ============================================================================
+   LEGACY — kept so existing reference HTML still renders unchanged.
+   ========================================================================== */
+
+.chev {
+  display:inline-block; width:0; height:0;
+  border-top:3px solid transparent; border-bottom:3px solid transparent;
+  border-left:5px solid currentColor;
+  margin:0 6px 1px; vertical-align:middle; opacity:.5;
+}
+.cards--flush { gap:0; }

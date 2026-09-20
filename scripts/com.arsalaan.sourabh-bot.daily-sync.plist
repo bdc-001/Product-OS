@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.arsalaan.sourabh-bot.daily-sync</string>
+  <key>Comment</key>
+  <string>09:00 / 17:00 / 01:00 Asia/Kolkata: Cursor Agent CLI Jira/Cliq/git ingest for Sourabh_Bot</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/open</string>
+    <string>/Users/arsalaanmohammed/Library/Application Support/sourabh-bot/bin/daily-api-sync.command</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/arsalaanmohammed/Library/Application Support/sourabh-bot</string>
+  <key>StartCalendarInterval</key>
+  <array>
+    <dict>
+      <key>Hour</key>
+      <integer>9</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key>
+      <integer>17</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+    <dict>
+      <key>Hour</key>
+      <integer>1</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+  </array>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>LaunchOnlyOnce</key>
+  <false/>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>Nice</key>
+  <integer>5</integer>
+  <key>StandardOutPath</key>
+  <string>/Users/arsalaanmohammed/Library/Logs/sourabh-bot/launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/arsalaanmohammed/Library/Logs/sourabh-bot/launchd.err.log</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>/Users/arsalaanmohammed</string>
+    <key>TZ</key>
+    <string>Asia/Kolkata</string>
+    <key>PATH</key>
+    <string>/Users/arsalaanmohammed/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+</dict>
+</plist>

@@ -1,0 +1,8 @@
+Run today's API sync according to AGENTS.md.
+
+1. Fetch Jira, Cliq, go_services git, roadmap statuses, and release detection via refresh_platform (or POST /api/refresh if the API is already up).
+2. Retry failed steps once or twice, then continue.
+3. Validate with the pytest commands in AGENTS.md.
+4. Update only what is required for ingest to work. Do not change architecture, credentials, or unrelated UI.
+5. Write data/daily-sync/YYYY-MM-DD.md (IST) with what was fetched, changed, failed, and what needs attention.
+6. Do not send Cliq, do not write Jira, do not git commit or push.

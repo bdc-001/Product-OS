@@ -1,0 +1,527 @@
+:root {
+  --page: #ffffff;
+  --wash: rgba(118, 118, 128, 0.12);
+  --text: #1d1d1f;
+  --muted: #86868b;
+  --hairline: #d2d2d7;
+  --ink: #1d1d1f;
+  --ink-hover: #000000;
+  --sel-fill: rgba(0, 0, 0, 0.04);
+  --danger: #b80000;
+  --pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --smooth: cubic-bezier(0.32, 0.72, 0, 1);
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.06), 0 10px 28px rgba(0, 0, 0, 0.09);
+}
+
+.copilot-dock {
+  position: fixed;
+  z-index: 1200;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+}
+.copilot-fab,
+.copilot-panel {
+  pointer-events: auto;
+}
+.copilot-fab {
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.38s var(--pop), background-color 0.3s var(--smooth);
+}
+.copilot-fab:hover { background: var(--ink-hover); }
+.copilot-fab:active { transform: scale(0.96); }
+.copilot-panel {
+  width: min(420px, calc(100vw - 32px));
+  height: min(680px, calc(100dvh - 32px));
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow);
+}
+.copilot-shell {
+  height: 100%;
+  min-height: 0;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+  padding: 0;
+}
+.copilot-rail {
+  display: none;
+  border-right: 1px solid #d2d2d7;
+  background: #f5f5f7;
+  flex-direction: column;
+  min-height: 0;
+  padding: 16px 12px 20px;
+}
+.copilot-rail.open {
+  display: flex;
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: min(280px, 86%);
+  z-index: 12;
+  box-shadow: var(--shadow);
+}
+.copilot-rail-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.copilot-rail-label {
+  font-size: 13px;
+  color: #6e6e73;
+  margin: 16px 4px 8px;
+  flex-shrink: 0;
+}
+.copilot-convs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  min-height: 0;
+}
+.copilot-convs button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  color: #1d1d1f;
+  transition: background-color 0.3s var(--smooth), color 0.3s var(--smooth), transform 0.38s var(--pop);
+}
+.copilot-convs button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.copilot-convs button i {
+  font-style: normal;
+  font-size: 12px;
+  color: #6e6e73;
+}
+.copilot-convs button:hover { background: rgba(0, 0, 0, 0.04); }
+.copilot-convs button.on {
+  background: var(--ink);
+  color: #fff;
+}
+.copilot-convs button.on i { color: rgba(255, 255, 255, 0.8); }
+.copilot-rail-empty {
+  margin: 8px 4px;
+  font-size: 13px;
+  color: #6e6e73;
+}
+.copilot-rail-toggle { display: inline-flex; }
+.copilot-chat {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+.copilot-chat-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #d2d2d7;
+  flex-shrink: 0;
+}
+.copilot-chat-title { min-width: 0; flex: 1; }
+.copilot-stream {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.copilot-empty { margin: auto; text-align: center; max-width: none; }
+.copilot-msg {
+  max-width: 100%;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid #d2d2d7;
+}
+.copilot-msg.you { margin-left: auto; background: #f5f5f7; }
+.copilot-msg.bot { margin-right: auto; background: #fff; }
+.copilot-msg b { font-size: 12px; color: #6e6e73; font-weight: 600; }
+.copilot-msg p { margin: 6px 0 0; font-size: 15px; line-height: 1.47; white-space: pre-wrap; }
+.copilot-cite { margin: 0; font-size: 12px; color: #6e6e73; }
+.copilot-questions { margin: 0; padding-left: 18px; font-size: 14px; color: #1d1d1f; }
+.copilot-approve {
+  border: 1px solid #d2d2d7;
+  border-radius: 18px;
+  padding: 16px;
+  background: #f5f5f7;
+}
+.copilot-compose { padding: 10px 16px 14px; border-top: 1px solid #d2d2d7; }
+.copilot-connect { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.copilot-picker {
+  border: 1px solid #d2d2d7;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.copilot-picker ul { list-style: none; margin: 0; padding: 0; max-height: 180px; overflow: auto; }
+.copilot-picker button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+.copilot-picker button:hover { background: #f5f5f7; }
+.copilot-input {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  border: 1px solid #d2d2d7;
+  border-radius: 18px;
+  padding: 8px 8px 8px 14px;
+  background: #fff;
+}
+.copilot-input textarea {
+  flex: 1;
+  border: 0;
+  resize: none;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.47;
+  min-height: 44px;
+  background: transparent;
+}
+.copilot-input:focus-within {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+.copilot-input textarea:focus { outline: none; }
+.copilot-thumbs { display: flex; gap: 8px; margin-bottom: 8px; }
+.copilot-thumbs button { border: 0; background: transparent; padding: 0; cursor: pointer; }
+.copilot-thumbs img { width: 56px; height: 56px; object-fit: cover; border-radius: 12px; border: 1px solid #d2d2d7; }
+.copilot-actions { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.copilot-action { background: #fff; border: 1px solid #d2d2d7; border-radius: 12px; padding: 12px; }
+.copilot-action.blocked { background: #fafafa; }
+.copilot-check { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; }
+.copilot-check b { font-size: 12px; color: #6e6e73; }
+.copilot-gaps { margin-top: 10px; }
+.copilot-results { margin: 0; padding-left: 18px; }
+.copilot-results li { margin: 8px 0; font-size: 14px; }
+.copilot-results .ok a { color: var(--ink); }
+.copilot-results .bad { color: #b80000; }
+.copilot-diff { margin: 6px 0 0; font-size: 13px; }
+.copilot-diff .from { text-decoration: line-through; color: #6e6e73; }
+.copilot-diff .to { color: var(--ink); font-weight: 600; }
+.copilot-gap-error { color: #b80000; font-size: 13px; margin: 6px 0 0; }
+
+.epic-block,
+.roadmap-card,
+.release-strip,
+.copilot-action {
+  box-shadow: var(--shadow);
+}
+
+.roadmap-shell { max-width: none; }
+.epic-block {
+  background: #fff;
+  border: 1px solid #d2d2d7;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+  min-width: 0;
+}
+.epic-head,
+.month-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.epic-title {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.25;
+  padding: 0;
+  margin: 6px 0 10px;
+  color: #1d1d1f;
+  resize: none;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.epic-note,
+.ticket-note {
+  width: 100%;
+  border: 1px solid #d2d2d7;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  min-height: 64px;
+  resize: vertical;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #1d1d1f;
+}
+.mile-track { margin: 20px 0 8px; padding: 8px 0 4px; }
+.mile-line {
+  height: 3px;
+  background: #d2d2d7;
+  border-radius: 99px;
+  margin: 0 4%;
+  overflow: hidden;
+}
+.mile-line i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--ink);
+  animation: mile-draw 0.5s var(--smooth) forwards;
+}
+@keyframes mile-draw { to { width: 100%; } }
+.mile-nodes {
+  display: grid;
+  gap: 12px;
+  margin-top: -11px;
+  list-style: none;
+  padding: 0;
+}
+.mile-nodes li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  min-width: 0;
+  animation: mile-pop 0.5s var(--pop) both;
+}
+@keyframes mile-pop {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.mile-node {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #d2d2d7;
+  box-shadow: 0 0 0 4px #fff;
+}
+.mile-nodes li.on .mile-node,
+.mile-nodes li.now .mile-node {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.mile-nodes li.empty .mile-node { border-color: #e8e8ed; }
+.mile-nodes button {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  font: inherit;
+}
+.mile-nodes strong { font-size: 13px; font-weight: 600; color: #1d1d1f; }
+.mile-nodes span { font-size: 12px; color: #6e6e73; overflow-wrap: anywhere; }
+.month-cols {
+  display: grid;
+  gap: 16px 20px;
+  align-items: stretch;
+}
+.month-col {
+  min-height: 80px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #d2d2d7;
+  background: #f5f5f7;
+  border-radius: 18px;
+}
+.month-col.now { background: var(--sel-fill); border-color: var(--ink); }
+.month-col.next { background: #fff; border-style: dashed; }
+.month-col.droppable { outline: 2px dashed var(--ink); outline-offset: 2px; }
+.month-col.closed {
+  min-height: 280px;
+  padding: 10px 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  overflow: hidden;
+}
+.month-rail {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  min-height: 240px;
+  padding: 12px 0;
+  font: inherit;
+  color: #6e6e73;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.month-rail span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.month-label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6e6e73;
+  margin: 0;
+  font-weight: 600;
+}
+.month-empty { margin: 12px 0 4px; font-size: 13px; color: #6e6e73; }
+.roadmap-card {
+  background: #fff;
+  border: 1px solid #d2d2d7;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: grab;
+  border-radius: 18px;
+}
+.roadmap-card:active { cursor: grabbing; }
+.ticket-files { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ticket-attach { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+.ticket-sheet { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) auto; gap: 10px; align-items: center; }
+
+.release-strip {
+  border: 1px solid #d2d2d7;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fff;
+}
+.release-strip.awaiting { border-color: var(--ink); background: var(--sel-fill); }
+.release-strip.failed { border-color: #b80000; }
+.release-chips { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.release-chip {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid #d2d2d7;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+}
+.release-chip.off { opacity: 0.55; }
+.release-chip b { display: block; font-size: 14px; }
+.release-chip em { display: block; font-style: normal; font-size: 13px; color: #6e6e73; }
+.release-chip small { display: block; font-size: 12px; color: #6e6e73; }
+
+@media (max-width: 900px) {
+  .platform { grid-template-columns: 1fr !important; }
+  .mile-nodes { grid-template-columns: 1fr !important; margin-top: 12px; }
+  .mile-line { display: none; }
+  .month-cols { grid-template-columns: 1fr !important; }
+  .month-col.closed { min-height: 48px; }
+  .month-rail { min-height: 48px; }
+  .month-rail span { writing-mode: horizontal-tb; transform: none; letter-spacing: 0.08em; }
+  .ticket-sheet { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .copilot-panel { width: calc(100vw - 24px); height: calc(100dvh - 24px); border-radius: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mile-line i, .mile-nodes li { animation: none; }
+  .mile-line i { width: 100%; }
+  .copilot-convs button, .copilot-msg, .copilot-fab { transition: none; }
+}
+
+@media print {
+  .platform aside, .pulse, .copilot-dock { display: none !important; }
+  .workspace { overflow: visible; }
+}
+
+/* Shared workspace navigation and motion. */
+.nav-group {
+  margin: 12px 12px 6px !important;
+  color: var(--muted);
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 1500;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: white;
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.skip-link:focus { top: 12px; }
+.sync-spinning { animation: sync-turn 1.2s linear infinite; }
+@keyframes sync-turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .sync-spinning { animation: none; }
+}
+
+.module-intro { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 28px; flex-wrap: wrap; }
+.knowledge-layout { display: grid; grid-template-columns: 250px minmax(0,1fr); gap: 28px; align-items: start; }
+.knowledge-list { display: flex; flex-direction: column; gap: 8px; max-height: 65vh; overflow: auto; }
+.knowledge-row.MuiButton-root { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; text-align: left; border: 1px solid var(--hairline); padding: 14px; }
+.knowledge-row.selected { background: var(--wash); border-color: var(--ink); }
+.page-body { animation: page-arrive 180ms ease-out; }
+@keyframes page-arrive { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media(max-width:900px) { .knowledge-layout { grid-template-columns: 1fr; } .knowledge-list { max-height: 220px; } }
+@media(prefers-reduced-motion:reduce) { .page-body { animation: none; } }
+.roadmap-card.compact { padding: 10px 12px; border-radius: 12px; margin-bottom: 6px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+.roadmap-card.compact > p { margin: 6px 0; font-size: 13px; }
+.roadmap-card .ticket-note { margin-top: 12px; }
+.ticket-files li { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; overflow-wrap: anywhere; }
+.copilot-empty { max-width: none; }
+.copilot-sources { border: 1px solid var(--hairline); border-radius: 12px; padding: 12px 16px; font-size: 12px; }
+.copilot-sources summary { cursor: pointer; font-weight: 600; }
+.copilot-chat-head h2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.copilot-connect .MuiButton-root { font-size: 12px; padding: 7px 12px; }

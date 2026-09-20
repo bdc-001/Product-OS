@@ -1,0 +1,31 @@
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+secrets/
+__pycache__/
+.venv/
+node_modules/
+.DS_Store
+dist/
+.next/
+.next-dev/
+*.tsbuildinfo
+
+# Local runtime, tokens, and generated artifacts — never publish
+data/
+output/
+Sense_Communication/
+debff5d2-8aaa-4ee5-8522-7112774c3c48/
+.pytest_cache/
+.cursor/
+.remotion/
+backend/.remotion/
+
+# SQLite sidecars if any escape data/
+*.db
+*.db-journal
+*.db-shm
+*.db-wal

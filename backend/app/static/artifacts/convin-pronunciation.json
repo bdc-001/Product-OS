@@ -1,0 +1,32 @@
+{
+  "id": "pdict_iAQb69pZkDsB4T6VjFksUq",
+  "name": "Convin marketing terms v2",
+  "access": "private",
+  "note": "Marketing pronunciation lexicon. Any script containing one of these terms is synthesised with this dictionary attached; never respell a term in visible copy to work around the model.",
+  "items": [
+    {
+      "text": "Convin",
+      "pronunciation": "<<ˈ|k|ɑ|n|v|ɪ|n>>",
+      "case_sensitive": true,
+      "reason": "CON-vin, first syllable stressed, short i in vin."
+    },
+    {
+      "text": "PAN",
+      "pronunciation": "<<ˈ|p|æ|n>>",
+      "case_sensitive": true,
+      "reason": "Indian PAN card is spoken as the word pan; the model otherwise reads it as than."
+    },
+    {
+      "text": "recording",
+      "pronunciation": "<<r|ɪ|ˈ|k|ɔ|r|d|ɪ|ŋ>>",
+      "case_sensitive": false,
+      "reason": "Stress on the second syllable, re-COR-ding."
+    },
+    {
+      "text": "recordings",
+      "pronunciation": "<<r|ɪ|ˈ|k|ɔ|r|d|ɪ|ŋ|z>>",
+      "case_sensitive": false,
+      "reason": "Stress on the second syllable, re-COR-dings."
+    }
+  ]
+}

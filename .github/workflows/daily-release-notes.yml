@@ -1,0 +1,52 @@
+name: Daily release notes
+
+on:
+  schedule:
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+
+jobs:
+  notes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Clone go_services
+        env:
+          BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
+          BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BITBUCKET_USERNAME:-}" ] || [ -z "${BITBUCKET_APP_PASSWORD:-}" ]; then
+            echo "Set BITBUCKET_USERNAME and BITBUCKET_APP_PASSWORD in repo secrets."
+            exit 1
+          fi
+          git clone --depth 80 "https://${BITBUCKET_USERNAME}:${BITBUCKET_APP_PASSWORD}@bitbucket.org/convin/go_services.git" "$GITHUB_WORKSPACE/go_services"
+
+      - name: Install Python deps
+        working-directory: backend
+        run: pip install -r requirements.txt
+
+      - name: Generate and email notes
+        working-directory: backend
+        env:
+          CODEBASE_PATH: ${{ github.workspace }}/go_services
+          CODEBASE_PULL: "true"
+          DATABASE_URL: sqlite:////tmp/pm_agent.db
+          TIMEZONE: Asia/Kolkata
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_MODEL: gpt-4o-mini
+          LLM_BASE_URL: https://api.openai.com/v1
+          RELEASE_NOTES_EMAIL: arsalaan@convin.ai
+          RELEASE_NOTES_FRESH_DAYS: "3"
+          SMTP_HOST: smtp.zoho.in
+          SMTP_PORT: "587"
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_USER }}
+        run: python -m app daily-release-notes
