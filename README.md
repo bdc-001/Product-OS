@@ -1,61 +1,28 @@
 # Product OS
 
-The personal product operating system for a Sense PM.
+A self-hosted workspace for product work: notes, requirements, interactive prototypes, document libraries, release planning, and marketing drafts.
 
-It is the desk you sit at in the morning: Jira and Cliq already correlated, the `go_services` clone indexed, prototypes you can click, notes you can file from, Copilot that will not write Jira until you Approve, and a marketing lane that discovers shippable features without posting anything on its own.
+Connect your own tools and repository through **Settings**. Start with notes and documents, then enable the integrations your workflow needs.
 
-Local app: [http://localhost:3000](http://localhost:3000)  
-API: [http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
+## Workspace
 
----
-
-## What it is for
-
-Product OS is not a generic chatbot with a Jira plugin. It is a workspace that already knows the product:
-
-| Area | What you do here |
+| Area | Purpose |
 | --- | --- |
-| **This week** | Evidence-backed standup. Tickets, chats, and code in one briefing. |
-| **Jira / Support** | Sense (`AC`) and Product Support (`PS`) in PM scope. Copilot is the only Jira write path, and only after **Approve**. |
-| **Cliq** | Threads the PM is in. Ingest is read-only from the scheduled job. |
-| **Codebase** | Local `go_services` clone. Index a branch, search, cite files. |
-| **Prototype** | Sense sandboxes with production-shaped routes. Table of projects, last modified, filters. **Write PRD** attaches the prototype to Copilot. |
-| **PRD** | Ground a spec in indexed code, tagged AC tickets, and/or a Sense prototype. Export markdown or PDF. |
-| **Roadmap / Features / Artifacts / Comms** | Epic status, feature extract, docs, and release communication drafts. |
-| **Notes** | Meetings, dailies, decisions, learnings. Date filter, delete, structure/summarise/extract, file a ticket from an actionable. |
-| **LMS / Competitors / Marketing** | Library, competitive signals, sellable-feature discovery. Campaign production starts manually from `/marketing`. |
-| **Settings** | Tokens, models, and workspace overlay. Sensitive fields stay encrypted on disk. |
-| **Copilot** | Floating assistant. Reads code, notes, documents, and prototype files. Does not send Cliq. Does not write Jira until you Approve. |
+| Notes | Capture meetings, decisions, actions, and learnings. |
+| PRD | Write and edit requirements, optionally generate a draft from tickets and code, and save PDF snapshots to LMS. |
+| Prototype | Create interactive prototypes and refine them in the studio. |
+| LMS | Search uploaded documents and saved PRD PDFs; filter by document type and reading status. |
+| Jira and chat | Bring configured project tickets and supported chat sources into context. |
+| Codebase | Index a branch of your own local Git checkout. |
+| Roadmap, Comms, and Artifacts | Plan work and prepare release documents. |
+| Marketing | Discover candidate features and manually start campaign production. |
+| Copilot | Use workspace context to draft answers and proposed actions. Jira writes require approval. |
 
-Timezone for the product is **Asia/Kolkata**.
-
----
-
-## Architecture
-
-```
-browser  :3000  Next.js (MUI)
-              │  /api/*  rewrite
-              ▼
-API      :8000  FastAPI + SQLite (data/pm_agent.db, local only)
-              │
-              ├── Jira (AC, PS)
-              ├── Zoho Cliq (cliq.zoho.in)
-              ├── local go_services git clone
-              ├── Google Drive / Sheets (marketing, optional)
-              └── LLM (optional — ingest still works without it)
-```
-
-- **Frontend** (`frontend/`): App Router, client pages, Copilot widget, prototype studio.
-- **Backend** (`backend/`): ingest, standup, Copilot plans, prototype kit, PRD, marketing discovery.
-- **Data** (`data/`): SQLite, tokens, prototype files, indexes. **Not in git.**
-- **Product clone**: `CODEBASE_PATH` (Desktop `go_services`). **Not in this repo.** Sense stays AC-only.
-
----
+Settings has its own navigation for general configuration, repository and branch, integrations, models, content and storage, mail, and security.
 
 ## Quick start
 
-**1. Clone and configure**
+Requires Python 3.11+ and Node.js 20.9+.
 
 ```bash
 git clone https://github.com/bdc-001/Product-OS.git
@@ -63,9 +30,7 @@ cd Product-OS
 cp .env.example .env
 ```
 
-Fill `.env` or, after first run, use **Settings** in the app (preferred). The app writes `data/workspace.json` and encrypted `data/workspace.secrets.json`. It does not rewrite `.env`.
-
-**2. Backend**
+Start the API:
 
 ```bash
 cd backend
@@ -75,7 +40,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-**3. Frontend** (another terminal)
+In another terminal, start the UI:
 
 ```bash
 cd frontend
@@ -83,123 +48,66 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Do not start a second uvicorn on 8000.
+Open [Product OS](http://localhost:3000). The [API health endpoint](http://127.0.0.1:8000/api/health) reports backend availability.
 
-**4. Point at product code**
+## Configure your workspace
 
-Set `CODEBASE_PATH` to your local `go_services` clone. Index a branch from **Codebase**. Git fetch may need VPN/whitelist; if remote fetch fails, keep local branches.
+Use the in-app Settings pages or the variables documented in [`.env.example`](.env.example). Settings stores a local overlay and encrypted secret values under `data/`; it does not rewrite `.env`.
 
----
+| Connection | Configuration |
+| --- | --- |
+| Jira | Your base URL, account credentials, and comma-separated project keys in `JIRA_PROJECTS`. |
+| Repository | Your local checkout path in `CODEBASE_PATH`; choose and index the product branch in Settings → Codebase & branch. |
+| Chat | Supported Zoho Cliq OAuth credentials and regional API endpoints. |
+| AI | Provider endpoint, API key, and model routes. Generation requires a compatible configured provider. |
+| Google Drive / Sheets | Your service account, destination folders, and spreadsheet ID. Grant the service account access to those resources. |
+| Mail | Your SMTP settings and intended recipients, when using mail workflows. |
+| Locale | Set `TIMEZONE` and the schedules appropriate for your workspace. |
 
-## Environment
+Jira project keys, repository paths, Drive domains, and spreadsheet IDs have no personal defaults. Existing installations retain explicit environment and workspace settings.
 
-Copy from [`.env.example`](.env.example). Never commit `.env`, service-account JSON, or `data/cliq_token.json`.
+### Extending Product OS
 
-| Group | Variables | Notes |
-| --- | --- | --- |
-| Jira | `JIRA_BASE_URL`, `JIRA_EMAIL`, `JIRA_API_TOKEN`, `JIRA_PROJECTS` | Sense `AC` + support `PS`. |
-| Cliq | `CLIQ_*` | OAuth against `cliq.zoho.in`. Login expiry is a known failure; record it, do not open a browser OAuth flow from the unattended job. |
-| LLM | `LLM_API_KEY`, `LLM_MODEL`, `LLM_COPILOT_MODEL`, optional docs model | Optional. If down, ingest still runs; standup may be heuristic. |
-| Code | `CODEBASE_PATH`, `CODEBASE_PULL` | Absolute path to `go_services`. |
-| Mail | `SMTP_*`, `RELEASE_NOTES_*` | Outside scheduled ingest. Not used to auto-post Comms. |
-| Drive | `GDRIVE_*`, `MARKETING_SHEET_ID` | Share the sheet with the Drive service-account email as Editor if you get 403. |
+Current connectors support Jira, Zoho Cliq, local Git, and Google Drive/Sheets. This is not yet a drop-in plugin marketplace: adding another tracker or chat provider requires a backend adapter and its settings/UI wiring.
 
-Configure models and secrets in **Settings** when you can. Masked fields stay masked until you paste a new value.
+- Configuration and validation: `backend/app/config.py`, `backend/app/services/workspace.py`.
+- Integration and workflow implementations: `backend/app/services/`.
+- HTTP routes: `backend/app/api/routers/`.
+- Shared UI primitives and styling: `frontend/app/ui/`, `frontend/app/theme.ts`.
 
----
+Some prototype templates, discovery rules, and assistant workflows still contain product-specific assumptions. Review and adapt these before using those workflows with another product. The generic document editor and library do not require an indexed repository.
 
-## Copilot and Jira
+## Data and approvals
 
-Copilot may **read** Jira, Cliq, notes, library documents, indexed `go_services`, and Sense prototype code.
+Local data includes SQLite records, uploaded documents, generated artifacts, indexes, and prototype files. Back up the local data directory before moving or upgrading an installation.
 
-It may **write Jira** only after you click **Approve** on a plan. That is the only Jira write path.
+Do not commit `.env`, workspace data, tokens, service-account files, generated private artifacts, or a connected product repository. Encrypted secrets do not replace host access controls. The development server is intended for local use; review authentication and deployment controls before exposing it to a network.
 
-It must **not**, from the scheduled ingest job:
+Copilot proposes Jira writes for approval. Campaign production starts manually. Saving a PRD PDF stores a snapshot in the local LMS library; it does not upload it to Google Drive. Changed documents produce a new snapshot, while saving identical content reuses the existing PDF.
 
-- send Cliq (no standup delivery, no DMs, no release-ask nudges)
-- `git commit` / `git push`
-- rewrite `.env` or Cliq tokens
-- delete SQLite data, `data/stores/`, or dismissed release-ask records
-
-**Write PRD** on a prototype attaches that sandbox and asks Copilot to ground a spec in the prototype files and prompt history. The PRD is saved under **PRD**; it is not a Jira ticket.
-
----
-
-## Daily API sync
-
-Three times a day at **09:00, 17:00, and 01:00** Asia/Kolkata, a Cursor Agent CLI job runs the platform ingest. Contract: [`AGENTS.md`](AGENTS.md). Runner: [`scripts/daily-api-sync.sh`](scripts/daily-api-sync.sh).
-
-It pulls Jira + Cliq, syncs roadmap statuses, fetches/indexes the product branch, enqueues detected `release/YYYY-MM-DD` merges, then runs Product Marketing discovery into the mastersheet (sellable buyer features only). Campaign production stays manual.
-
-Install on the Mac:
+## Development
 
 ```bash
-chmod +x scripts/daily-api-sync.sh scripts/install-daily-sync.sh
-~/.local/bin/cursor-agent login   # once (subscription; skip CURSOR_API_KEY unless you want API billing)
-./scripts/install-daily-sync.sh
-```
-
-Amphetamine + `caffeinate` keep the machine awake for the job. Logs: `~/Library/Logs/sourabh-bot/`.
-
-In-process refresh (works even if uvicorn is down):
-
-```bash
+# Backend regression tests
 cd backend
-.venv/bin/python - <<'PY'
-import json
-from app.database import SessionLocal
-from app.services.refresh import refresh_platform
-db = SessionLocal()
-try:
-    print(json.dumps(refresh_platform(db), default=str, indent=2))
-finally:
-    db.close()
-PY
+.venv/bin/python -m pytest tests/test_knowledge.py tests/test_prd_pdf.py tests/test_prd_editor.py -q
 ```
-
-If `http://127.0.0.1:8000/api/health` is already up, `POST /api/refresh` is equivalent. Poll the job until it finishes.
-
----
-
-## Tests
-
-From `backend/`:
 
 ```bash
-.venv/bin/python -m pytest tests/test_refresh_jobs.py tests/test_release_asks.py -q
+# Frontend checks, from the repository root
+cd frontend
+npx tsc --noEmit
+node --test tests/http.test.cjs
 ```
 
-Broader suite as you touch an area, for example:
+Optional local automation and server helpers live in `scripts/`. Review their schedules, paths, and agent instructions for your environment before installing them. They are not required for interactive use.
 
-```bash
-.venv/bin/python -m pytest tests/test_knowledge.py tests/test_prototypes.py tests/test_copilot_run.py tests/test_prd_pdf.py -q
-```
+## Documentation
 
----
-
-## Repository layout
-
-```
-backend/          FastAPI app, tests, prototype kit
-frontend/         Next.js UI
-scripts/          Daily sync + launchd install
-docs/             Design notes (prototype editing, marketing, UI)
-.github/          Optional GitHub Action for release-notes email
-AGENTS.md         Contract for the unattended ingest agent
-```
-
-**Not in this repository (on purpose):** `.env`, SQLite and workspace secrets, Cliq tokens, prototype file trees, marketing renders, and the `go_services` product clone. This GitHub remote is public — keep credentials and vendor source on the machine.
-
----
-
-## Docs
-
-- [`docs/prototype-editing.md`](docs/prototype-editing.md) — how Prototype applies precise edits
-- [`docs/product-marketing.md`](docs/product-marketing.md) — discovery vs campaign production
-- [`docs/frontend-design-system.md`](docs/frontend-design-system.md) — UI tokens
-
----
+- [Design system](docs/platform-design-system.md)
+- [Prototype editing](docs/prototype-editing.md)
+- [Product marketing](docs/product-marketing.md)
 
 ## License
 
-Private product tooling. All rights reserved unless a license file is added later.
+No open-source license is currently granted. See any future LICENSE file for applicable terms.
