@@ -1,0 +1,28 @@
+{
+  "name": "product-films",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Remotion compositions for Product OS marketing films",
+  "scripts": {
+    "studio": "remotion studio src/marketing/index.tsx"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.504",
+    "@remotion/google-fonts": "^4.0.504",
+    "@remotion/lottie": "4.0.504",
+    "@remotion/motion-blur": "4.0.504",
+    "@remotion/paths": "4.0.504",
+    "@remotion/renderer": "^4.0.504",
+    "@remotion/shapes": "4.0.504",
+    "lottie-web": "5.13.0",
+    "lucide-react": "^0.544.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "remotion": "^4.0.504"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "typescript": "^5.8.3"
+  }
+}

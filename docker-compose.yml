@@ -1,0 +1,59 @@
+# Hosted-style stack: Postgres, API (with the inline worker and scheduler) and web.
+#   APP_ENCRYPTION_KEY=$(python3 -c "import secrets;print(secrets.token_urlsafe(32))") docker compose up --build
+# Defaults to single-user local mode. For a hosted install set ENVIRONMENT=production, AUTH_MODE=clerk,
+# CLERK_ISSUER, CLERK_SECRET_KEY and NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY; production refuses to boot without them.
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: productos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-productos}
+      POSTGRES_DB: productos
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U productos -d productos"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DATABASE_URL: postgresql://productos:${POSTGRES_PASSWORD:-productos}@db:5432/productos
+      APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?Set APP_ENCRYPTION_KEY}
+      AUTH_MODE: ${AUTH_MODE:-local}
+      CLERK_ISSUER: ${CLERK_ISSUER:-}
+      CLERK_JWKS_URL: ${CLERK_JWKS_URL:-}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-}
+      CLERK_WEBHOOK_SECRET: ${CLERK_WEBHOOK_SECRET:-}
+      CLERK_AUTHORIZED_PARTIES: ${CLERK_AUTHORIZED_PARTIES:-}
+      ALLOWED_ORIGINS: ${PUBLIC_APP_URL:-http://localhost:3000}
+      PUBLIC_APP_URL: ${PUBLIC_APP_URL:-http://localhost:3000}
+      RUN_WORKER: inline
+      RUN_SCHEDULER: "true"
+    volumes:
+      - appdata:/srv/data
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-}
+    depends_on:
+      - api
+    environment:
+      BACKEND_URL: http://api:8000
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY:-}
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+
+volumes:
+  pgdata:
+  appdata:
