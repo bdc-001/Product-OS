@@ -1,0 +1,161 @@
+{
+  "feature": "Campaign Schedule",
+  "module": "Campaigns",
+  "title": "Campaign Schedule",
+  "dek": "Campaign Schedule lets you set a campaign up in advance and hold it until a chosen date and time. Leads you add before then are held, and outreach starts on its own at the start time. It lives in the campaign wizard, in the Outbound Activity Schedule card.",
+  "sections": [
+    {
+      "heading": "📌 Navigation",
+      "items": [
+        {
+          "text": "Open Campaigns, then Create Campaign, or Edit from the menu on an existing campaign card. Campaign Start is on the Campaign Details step, in the Outbound Activity Schedule card below Timezone and Activity Hours."
+        }
+      ]
+    },
+    {
+      "heading": "📌 Campaign Start",
+      "items": [
+        {
+          "lead": "Start Immediately",
+          "text": "The default. The campaign starts engaging leads as soon as it is live, as it does today."
+        },
+        {
+          "lead": "Schedule for Later",
+          "text": "Pick a date and time. The picker starts at tomorrow 10:00 and does not accept a time in the past."
+        },
+        {
+          "lead": "Timezone",
+          "text": "The time is read in the campaign's timezone, not your browser's. 10:00 on an Asia/Kolkata campaign means 10:00 IST, even when it is set from London."
+        },
+        {
+          "lead": "Held leads",
+          "text": "Leads uploaded or pushed while the campaign is scheduled are held. They stay Active in the lead list, but no one is called or messaged until go-live."
+        },
+        {
+          "lead": "Note",
+          "text": "Cloning a campaign does not copy its schedule. The clone starts as Start Immediately.",
+          "note": true
+        }
+      ],
+      "screenshot": {
+        "id": "schedule-for-later",
+        "caption": "Campaign Start set to Schedule for Later. The time is read in the campaign timezone."
+      }
+    },
+    {
+      "heading": "📌 Calling hours",
+      "items": [
+        {
+          "lead": "Start outside Activity Hours",
+          "text": "The campaign still goes live at the start time, but the first call waits for the next open calling window. An amber warning says so under the picker; once the campaign is saved it names the exact time of the first call."
+        },
+        {
+          "lead": "Engagement days",
+          "text": "For held leads, max engagement days count from the first moment a call can be placed, not from when the lead was added or when the campaign went live. A Sunday go-live on a Monday to Saturday campaign does not use up Sunday."
+        }
+      ],
+      "screenshot": {
+        "id": "outside-hours",
+        "caption": "A Sunday start on a Monday to Saturday campaign. The warning names when the first call goes out."
+      }
+    },
+    {
+      "heading": "📌 Go-live",
+      "items": [
+        {
+          "lead": "Timing",
+          "text": "The campaign moves from Scheduled to Active within a minute of the start time. Held leads start engaging then; leads added after go-live start straight away, as today."
+        },
+        {
+          "lead": "Launch-day pacing",
+          "text": "The first call goes out at go-live. Later attempts that day keep the campaign's full-day spacing instead of squeezing the day's attempts into the hours left, so a mid-day launch makes fewer attempts on day one. From the next day, the normal daily pattern applies."
+        },
+        {
+          "lead": "Campaign card",
+          "text": "Until go-live, the card on Campaigns shows a purple Scheduled status and Starts with the date and time, in place of the Started date."
+        }
+      ],
+      "screenshot": {
+        "id": "scheduled-card",
+        "caption": "A scheduled campaign on Campaigns: Scheduled status and its start time instead of the Started date."
+      },
+      "figure": {
+        "kind": "flow",
+        "heading": "From Schedule for Later to the first call",
+        "caption": "Conceptual workflow: leads are held while Scheduled, the campaign goes Active within a minute of the start time, and the first call waits for an open calling window.",
+        "items": [
+          {
+            "lead": "Scheduled",
+            "text": "Leads are added and held"
+          },
+          {
+            "lead": "Start time",
+            "text": "Active within a minute"
+          },
+          {
+            "lead": "First call",
+            "text": "At go-live or the next open window"
+          },
+          {
+            "lead": "Engagement",
+            "text": "Days count from the first callable moment"
+          }
+        ]
+      }
+    },
+    {
+      "heading": "📌 Changing the schedule",
+      "items": [
+        {
+          "lead": "Before go-live",
+          "text": "You can move the start time, or switch to Start Immediately, which launches the campaign within a minute. Held leads follow the new time; nothing needs to be uploaded again."
+        },
+        {
+          "lead": "Past start time",
+          "text": "Saving a start time that has already passed is rejected. Pick a future time, or Start Immediately."
+        },
+        {
+          "lead": "After go-live",
+          "text": "Campaign Start is locked and shows Campaign has started. The rest of the campaign can still be edited."
+        }
+      ],
+      "screenshot": {
+        "id": "started-locked",
+        "caption": "After go-live, Campaign Start is locked."
+      }
+    },
+    {
+      "heading": "📌 Pause and Resume",
+      "items": [
+        {
+          "lead": "Pause before go-live",
+          "text": "Pause Campaign from the card menu stops the launch. The campaign moves to Paused and keeps its start time."
+        },
+        {
+          "lead": "Resume",
+          "text": "The campaign goes back to Scheduled. If the start time passed while it was paused, it goes live within a minute of resuming. Resuming means run it now; editing a past time is still rejected."
+        },
+        {
+          "lead": "Dashboard",
+          "text": "The Pause / Activate button on the Dashboard is hidden for a scheduled campaign. Change the start from the campaign wizard instead."
+        }
+      ],
+      "figure": {
+        "kind": "comparison",
+        "heading": "A start time that has already passed",
+        "caption": "Conceptual comparison: editing a campaign to a past start time is rejected; resuming a paused campaign whose start time passed launches it.",
+        "items": [
+          {
+            "lead": "Editing",
+            "text": "Rejected. Pick a future time or Start Immediately"
+          },
+          {
+            "lead": "Resuming",
+            "text": "Goes live within a minute"
+          }
+        ]
+      }
+    }
+  ],
+  "cta": "This feature is an effort towards letting teams prepare campaigns ahead of time and launch them on schedule, without someone having to be online at the start time. For any issue related to the feature, raise it to support@example.com."
+}

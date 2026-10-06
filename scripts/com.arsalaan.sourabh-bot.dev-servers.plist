@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.arsalaan.sourabh-bot.dev-servers</string>
+  <key>Comment</key>
+  <string>Keep Product OS on :8000 and :3000. Restart if a port drops.</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/zsh</string>
+    <string>/Users/arsalaanmohammed/Library/Application Support/sourabh-bot/bin/dev-servers-watchdog.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/Users/arsalaanmohammed/Library/Application Support/sourabh-bot</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>30</integer>
+  <key>LaunchOnlyOnce</key>
+  <false/>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>Nice</key>
+  <integer>5</integer>
+  <key>StandardOutPath</key>
+  <string>/Users/arsalaanmohammed/Library/Logs/sourabh-bot/watchdog.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/arsalaanmohammed/Library/Logs/sourabh-bot/watchdog.err.log</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>/Users/arsalaanmohammed</string>
+    <key>TZ</key>
+    <string>Asia/Kolkata</string>
+    <key>PATH</key>
+    <string>/Users/arsalaanmohammed/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+</dict>
+</plist>
